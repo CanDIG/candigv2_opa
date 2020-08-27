@@ -23,13 +23,13 @@ To run the service:
 ## TODO
 
 Packaging the data files and rego files in bundles seems like a no brainer:
-[https://www.openpolicyagent.org/docs/latest/management/#bundle-file-format]
+<https://www.openpolicyagent.org/docs/latest/management/#bundle-file-format>
 
 Especially considering we'll have something like a rego file per service
 and thus also whole lot more data files. Something else to consider will
 be how these bundles are distributed: when are these going to be created and
 should these be offered as is to OPA or provided through an HTTP API?
-[https://www.openpolicyagent.org/docs/latest/management/#bundle-service-api]
+<https://www.openpolicyagent.org/docs/latest/management/#bundle-service-api>
 
 Something else I think is unlikely to be needed but still relevant to mention
 is how to deploy OPA: as a single instance which N services refer to or
