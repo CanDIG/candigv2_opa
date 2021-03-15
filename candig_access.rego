@@ -60,3 +60,17 @@ allow_with_header[allowDataset] {
     paths[i].datasets[j].access_level <= passportDataset.access
     allowDataset := paths[i].datasets[j].dataset
 }
+
+allow_with_header_REMS[allowDataset] {
+    # payload := input
+    some i, j
+    paths[i].path == input.body.path
+    paths[i].method == input.body.method
+
+
+    "ControlledAccessGrants" == input.headers["X-Candig-Ext-Rems"].ga4gh_passport_v1[k].ga4gh_visa_v1.type
+    trace(paths[i].datasets[j].dataset)
+    passportDataset := input.ga4gh_passport_v1[k].ga4gh_visa_v1.value[paths[i].datasets[j].dataset]
+    paths[i].datasets[j].access_level <= passportDataset.access
+    allowDataset := paths[i].datasets[j].dataset
+}
