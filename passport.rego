@@ -173,3 +173,39 @@ inputFacultyRegistered = inputRegisteredAccess {
     inputRegisteredAccess
 } else = []
 
+
+## Input functions for REMS HEADERS take passports as a direct input. See input.json.X as an example ##
+
+# Returns ONLY datasets with a "Registered" access level (passport contains researcherStatus and acceptedTermsAndPolicies visas)
+inputRegisteredAccessREMS[allowedDataset] {
+    some i,j
+    paths[i].path == input.body.path
+    paths[i].method == input.body.method
+
+    researcherStatus with input.temp as input.headers["X-Candig-Ext-Rems"].ga4gh_passport_v1[_]
+    acceptedTermsAndPolicies with input.temp as input.headers["X-Candig-Ext-Rems"].ga4gh_passport_v1[_]
+
+    access_level := "Registered"
+
+    paths[i].datasets[j].access_level[_] == access_level
+    allowedDataset := paths[i].datasets[j].dataset
+
+}
+
+# Returns ONLY datasets with a "Controlled" access level (Claim exists in a controlledAccessGrant visa)
+inputControlledAccessREMS[allowedDataset] {
+    some i,j,k
+    paths[i].path == input.body.path
+    paths[i].method == input.body.method
+
+
+    controlledAccessGrants with input.temp as input.headers["X-Candig-Ext-Rems"].ga4gh_passport_v1[k]
+
+    access_level := "Controlled"
+    
+
+    paths[i].datasets[j].dataset == input.headers["X-Candig-Ext-Rems"].ga4gh_passport_v1[k].ga4gh_visa_v1.value
+    paths[i].datasets[j].access_level[_] == access_level
+    allowedDataset := paths[i].datasets[j].dataset
+
+}
