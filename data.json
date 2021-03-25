@@ -42,6 +42,10 @@
           {
             "dataset": "https://ega-archive.org/datasets/712",
             "access_level": ["Controlled", "Registered"]
+          },
+          {
+            "dataset": "urn:nbn:fi:lb-201403262",
+            "access_level": ["Controlled", "Registered"]
           }
         ]
       }
