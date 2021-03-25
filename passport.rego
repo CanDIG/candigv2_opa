@@ -9,6 +9,10 @@ default full_authn_pk=`-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlxY3PhZtA4ghjg19ndPIbuAyKIejBFouwp8KahT09EMFAZzPDWrzDpXTwgnJexhqVOuX2qUu0tsdnLyOwWpGl1iPVKzqsejeHXajfHNDFVbeU6FpFLPTgAjbhH02SX0VdkIMA6UU15fylfNeb4Yuw3+7l0aI5CaQLGWdbrirD6dWdOi8S6EZGcne/FEX4fqkcyOEy3SvuTVCsOCOCcY+XlzSndWXsNW9It3phFIq+cFwBmLbR6SFOlcgHwxANDNzXPQEGccyysnAS+Lm/9hFze88JfUOtCeFSxpBD1AcJlw/RbaiPVxGk6Xillhde5T1Sivp/3zx5A2CoxJ6lmfjnQIDAQAB
 -----END PUBLIC KEY-----`
 
+default full_REMS_pk=`-----BEGIN PUBLIC KEY-----
+uBYw_GP3I4MMEn9VQk7_6r4Z1QJn2ylupr-0CbttFjWjONUwI2xlr3vfuC6TxO7ho-eHtLbXuTMkkXok7-x3oE6aEm0lN3siZ1F4L3nXKeAuv3xBGwIDeLI0YA0x8NayUQs6UEcO2-cOq5PIhGVLx4cbp5FwOz-EW-uuoXOKMWuvJkGyhxXbIrLxbKEzPgS8bH69KbVspP2hWmvAAWoy5714RXbwNx_5vlde05DJIW26B3JtuIedBvuGlRqYsSV-4JQhjJHJn_xp3QZnl7j7SI6xDtYH9ja9TlEASmQbdHnzNkfzkOWZC4aL2XBQcP-LncYCdEb2sWRI_qnd7xKKNQ
+-----END PUBLIC KEY-----`
+
 now := time.now_ns()/1000000000
 
 
@@ -29,6 +33,30 @@ allowed = passport {
     # Return passport for Authorization parsing 
     passport := authN_token_payload.ga4gh_passport_v1
 }
+
+
+allowedREMS = visa {
+    # retrieve authn/x token parts
+    [authN_token_header, authN_token_payload, authN_token_signature] := io.jwt.decode(input.temp)
+
+    # Verify authn/x token signature
+    # authN_token_is_valid := io.jwt.verify_rs256(input.temp, full_REMS_pk)
+
+    # all([
+    #     # Authentication
+    #     authN_token_is_valid == true,
+
+    #     # Need to implement something to store Keycloak vs REMS aud/iss values
+
+    #     # authN_token_payload.aud[_] == aud,
+    #     # authN_token_payload.iss == iss,
+
+    #     authN_token_payload.iat < now,
+    # ])
+    # Return VISA for Authorization parsing 
+    visa := authN_token_payload
+}
+
 
 
 faculty {
@@ -177,34 +205,37 @@ inputFacultyRegistered = inputRegisteredAccess {
 ## Input functions for REMS HEADERS take passports as a direct input. See input.json.X as an example ##
 
 # Returns ONLY datasets with a "Registered" access level (passport contains researcherStatus and acceptedTermsAndPolicies visas)
-inputRegisteredAccessREMS[allowedDataset] {
+# tokenRegisteredAccessREMS[allowedDataset] {
+#     some i,j
+#     paths[i].path == input.body.path
+#     paths[i].method == input.body.method
+
+
+#     visa := allowedREMS with input.temp as input.headers["X-Candig-Ext-Rems"].ga4gh_passport_v1[_]
+
+#     researcherStatus with input.temp as visa
+#     acceptedTermsAndPolicies with input.temp as visa
+
+#     access_level := "Registered"
+
+#     paths[i].datasets[j].access_level[_] == access_level
+#     allowedDataset := paths[i].datasets[j].dataset
+
+# }
+
+# Returns ONLY datasets with a "Controlled" access level (Claim exists in a controlledAccessGrant visa)
+tokenControlledAccessREMS[allowedDataset] {
     some i,j
     paths[i].path == input.body.path
     paths[i].method == input.body.method
 
-    researcherStatus with input.temp as input.headers["X-Candig-Ext-Rems"].ga4gh_passport_v1[_]
-    acceptedTermsAndPolicies with input.temp as input.headers["X-Candig-Ext-Rems"].ga4gh_passport_v1[_]
-
-    access_level := "Registered"
-
-    paths[i].datasets[j].access_level[_] == access_level
-    allowedDataset := paths[i].datasets[j].dataset
-
-}
-
-# Returns ONLY datasets with a "Controlled" access level (Claim exists in a controlledAccessGrant visa)
-inputControlledAccessREMS[allowedDataset] {
-    some i,j,k
-    paths[i].path == input.body.path
-    paths[i].method == input.body.method
-
-
-    controlledAccessGrants with input.temp as input.headers["X-Candig-Ext-Rems"].ga4gh_passport_v1[k]
+    visa := allowedREMS with input.temp as input.headers["X-Candig-Ext-Rems"].ga4gh_passport_v1[_]
+    controlledAccessGrants with input.temp as visa
 
     access_level := "Controlled"
     
 
-    paths[i].datasets[j].dataset == input.headers["X-Candig-Ext-Rems"].ga4gh_passport_v1[k].ga4gh_visa_v1.value
+    paths[i].datasets[j].dataset == visa.ga4gh_visa_v1.value
     paths[i].datasets[j].access_level[_] == access_level
     allowedDataset := paths[i].datasets[j].dataset
 
