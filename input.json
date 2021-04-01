@@ -1,0 +1,11 @@
+{
+    "body": {
+        "path": "api/ga4gh/individuals",
+        "method": "GET"
+    },
+    "headers": {
+        "X-Candig-Ext-Rems":  { "ga4gh_passport_v1": [
+            "eyJhbGciOiJSUzI1NiIsImprdSI6Imh0dHA6Ly9sb2NhbGhvc3Q6MzAwMS9hcGkvandrIiwidHlwIjoiSldUIiwia2lkIjpudWxsfQ.eyJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjMwMDEvIiwic3ViIjoiODJmODEyNDktMGNlZS00NTg5LThmNjAtNjUzYzg3ZDUxZWM3IiwiaWF0IjoxNjE2Njk2MzA4MDEwLCJleHAiOjE2NDgyMzIzMDgwMTAsImdhNGdoX3Zpc2FfdjEiOnsidHlwZSI6IkNvbnRyb2xsZWRBY2Nlc3NHcmFudHMiLCJ2YWx1ZSI6InVybjpuYm46Zmk6bGItMjAxNDAzMjYyIiwic291cmNlIjoiaHR0cDovL2xvY2FsaG9zdDozMDAxLyIsImJ5IjoiZGFjIiwiYXNzZXJ0ZWQiOjE2MTY1Mjc4OTA5NDV9fQ.ogopXDEdkBvnJhUQZwmCspqJBIQttWoTGqavMqlkoD4sV4s3rQzE3-SBmNnOllB1ZPX0EMQW3Eh3qHs477mrduCGWb9wnKO9DVydhuQbEVOL5o-0V6S2HTjK2IByQmXHWzSXhKcHLR46vfKpsLC4szR1sgFek9g7RWCGH2jpjCZaOFyvuRJ0uoYTI2jBysldlmXZYVrz0A8wLFm2dg2wXg5cspmz0k5K4_QMDWUdJ9yU8OlNcIrb231mxyb5fJjRpYmJiVP14QCOaxZUGlJEZLVK_TXow8qxP7F3ACmz2uxEnTt87qdMs7OjEZBWs4FnafXGwCKNIOkTcpOKZHzqMA"
+          ]}
+    }
+}
